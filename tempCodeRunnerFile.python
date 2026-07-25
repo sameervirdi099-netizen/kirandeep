@@ -1,0 +1,137 @@
+import streamlit as st
+from streamlit_option_menu import option_menu
+
+#pip install plotly
+import plotly.express as px
+import pandas as pd
+
+
+
+st.set_page_config(page_title="Mera page", page_icon=":heart:", layout="wide")
+df=pd.read_csv("covid.csv")
+df.info()
+with st.sidebar:
+    opt=option_menu("Menu",options=["Home","Dataset","Preprocessing","Visualization","About"],icons=["house","file-text","activity","bar-chart","person"],default_index=0)
+
+if opt=="Home":
+    st.title("This is Home page")
+    st.write("Hello world")
+
+elif opt=="Dataset":
+    t1,t2,t3=st.tabs(["Data","Info","Description"])
+    with t1:
+        st.dataframe(df)
+    with t2:
+        st.write(df.columns)
+    with t3:
+        st.table(df.describe())
+
+elif opt=="Preprocessing":
+    t1,t2=st.tabs(["Before-Processing","After-Processing"])
+    with t1:
+        st.write(df.isna().sum())
+    with t2:
+        
+        df.drop(columns=["NewCases","NewDeaths","NewRecovered","Serious,Critical"],inplace=True)
+        df.dropna(inplace=True)
+        df.reset_index(drop=True,inplace=True)
+        st.write(df.isna().sum())
+        st.dataframe(df)
+        
+
+elif opt=="Visualization":
+    t1,t2,t3=st.tabs(["Streamlit-Visualization","Plotly-Visualization","Matplotlib/Seaborn-Visualization"])
+    df.drop(columns=["NewCases","NewDeaths","NewRecovered","Serious,Critical"],inplace=True)
+    df.dropna(inplace=True)
+    df.reset_index(drop=True,inplace=True)
+    with t1:
+        st.bar_chart(df,x="gender",y="daily_social_media_hours")
+        st.bar_chart(df,x="gender",y="daily_social_media_hours",color="depression_lebel")
+
+        st.scatter_chart(df,x="sleep_hours",y="daily_social_media_hours",x_label="sleep_hours",y_label="Total-Cases")
+        st.scatter_chart(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel")
+        st.scatter_chart(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel",size="daily_social_media_hours")
+
+        st.line_chart(df,x="sleep_hours",y="daily_social_media_hours")
+
+        st.area_chart(df,x="sleep_hours",y="daily_social_media_hours")
+        st.area_chart(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel")
+    
+    with t2:
+        # fig1=px.bar(df,x="Continent",y="daily_social_media_hours")
+        # st.plotly_chart(fig1)
+
+        # fig12=px.bar(df,x="Continent",y="daily_social_media_hours",color="depression_lebel")
+        # st.plotly_chart(fig12)
+
+        # fig13=px.bar(df,x="Continent",y="daily_social_media_hours",color="depression_lebel",animation_group="depression_lebel",title="Total Cases By Continent",hover_data=["TotalRecovered","daily_social_media_hours"])
+        # st.plotly_chart(fig13)
+
+        # #line-
+        # fig2=px.line(df,x="sleep_hours",y="daily_social_media_hours")
+        # st.plotly_chart(fig2)
+
+        # fig21=px.line(df,x="sleep_hours",y="daily_social_media_hours",log_y=True,log_x=True)
+        # st.plotly_chart(fig21)
+
+
+        # #area-
+        # fig3=px.area(df,x="sleep_hours",y="daily_social_media_hours")
+        # st.plotly_chart(fig3)
+
+        # fig31=px.area(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel")
+        # st.plotly_chart(fig31)
+
+        # fig32=px.area(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel",title="Total Cases By Continent",hover_data=["TotalRecovered","daily_social_media_hours"])
+        # st.plotly_chart(fig32)
+
+
+        # #scatter-
+        # fig4=px.scatter(df,x="sleep_hours",y="daily_social_media_hours")
+        # st.plotly_chart(fig4)
+
+        # fig41=px.scatter(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel")
+        # st.plotly_chart(fig41)
+
+        # fig42=px.scatter(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel",size="daily_social_media_hours")
+        # st.plotly_chart(fig42)
+
+        # fig43=px.scatter(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel",size="daily_social_media_hours",size_max=100)
+        # st.plotly_chart(fig43)
+
+        # fig44=px.scatter(df,x="sleep_hours",y="daily_social_media_hours",color="depression_lebel",size="daily_social_media_hours",size_max=100,log_y=True,log_x=True)
+        # st.plotly_chart(fig44)
+
+        #3-d chart
+
+        fig5=px.scatter_3d(df,x="sleep_hours",y="daily_social_media_hours",z="daily_social_media_hours",color="depression_lebel",size="TotalRecovered",size_max=100,log_x=True,log_y=True,log_z=True)
+        st.plotly_chart(fig5)
+
+        #pie
+        fig6=px.pie(df,names="Continent",values="daily_social_media_hours",title="Total Cases By Continent",hover_data=["TotalRecovered","daily_social_media_hours"])
+        st.plotly_chart(fig6)
+
+        fig6=px.pie(df,names="Continent",values="daily_social_media_hours",title="Total Cases By Continent",hover_data=["TotalRecovered","daily_social_media_hours"],hole=0.3)
+        st.plotly_chart(fig6)
+
+        #sunburst
+        fig7=px.sunburst(df,path=["Continent","depression_lebel","sleep_hours"],values="daily_social_media_hours",title="Total Cases By Continent",hover_data=["TotalRecovered","daily_social_media_hours"])
+        st.plotly_chart(fig7)
+    with t3:
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+
+        sns.barplot(df,x="gender",y="daily_social_media_hours")
+        
+        plt.bar(df["gender"],df["daily_social_media_hours"])
+        plt.xlabel("gender")
+        plt.ylabel("Total Cases")
+        plt.title("Total Cases By gender")
+        plt.show()
+        st.pyplot()
+
+
+        
+elif opt=="About":
+    st.title("About")
+    st.write("Hello world")
