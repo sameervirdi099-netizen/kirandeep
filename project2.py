@@ -20,7 +20,7 @@ st.set_page_config(
 def load_data(uploaded_file=None):
     if uploaded_file is None:
         try:
-            return pd.read_csv("t.csv")
+            return pd.read_csv("t (2).csv")
         except Exception:
             return None
     if uploaded_file.name.endswith(".csv"):
